@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AdminSeeder::class,
-            // StructureSeeder::class,
+            StationSeeder::class,
         ]);
     }
 }

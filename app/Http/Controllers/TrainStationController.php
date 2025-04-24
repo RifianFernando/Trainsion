@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\trains;
+use App\Models\TrainStation;
 use Illuminate\Http\Request;
 
-class TrainsController extends Controller
+class TrainStationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TrainsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(trains $trains)
+    public function show(TrainStation $trainStation)
     {
         //
     }
@@ -42,7 +42,7 @@ class TrainsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(trains $trains)
+    public function edit(TrainStation $trainStation)
     {
         //
     }
@@ -50,7 +50,7 @@ class TrainsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, trains $trains)
+    public function update(Request $request, TrainStation $trainStation)
     {
         //
     }
@@ -58,7 +58,7 @@ class TrainsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(trains $trains)
+    public function destroy(TrainStation $trainStation)
     {
         //
     }
