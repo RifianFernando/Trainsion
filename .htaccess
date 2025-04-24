@@ -1,0 +1,49 @@
+<IfModule mod_rewrite.c>
+
+    # Environment Variables
+
+    ## For example a laravel app
+    ## Document : D:/xampp/htdocs/web/app/laravel/.htaccess
+    ## Path     : D:/xampp/htdocs/web/app/laravel/public/index.php
+    ## URI      :                /web/app/laravel/public/index.php
+    ## root_path   = web/app/laravel
+    ## public_path = public
+    ## app_file    = index.php
+
+    SetEnvIf Request_URI ^.* root_path=.
+    SetEnvIf Request_URI ^.* public_path=public
+    SetEnvIf Request_URI ^.* app_file=index.php
+
+    # Make folder to be not indexable
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Protect hidden files
+    RewriteCond %{REQUEST_URI} "!(^|/)\.well-known/([^./]+./?)+$" [NC]
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+
+    # Protect storage folder
+    RewriteCond %{REQUEST_URI} "^/storage"
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\." - [F]
+
+    RewriteCond %{REQUEST_URI} ^/$
+    RewriteRule ^.* %{ENV:public_path}/%{ENV:app_file} [END]
+
+    # Serve Public Files
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:root_path}/%{ENV:public_path}/$0 -d [OR]
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:root_path}/%{ENV:public_path}/$0 -f
+    RewriteRule ^.* %{ENV:public_path}/$0 [END]
+
+    # Reroutes to app preprocessor (like index.php or index.html)
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:root_path}/%{ENV:public_path}/$0 !-d
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:root_path}/%{ENV:public_path}/$0 !-f
+    RewriteRule ^.* %{ENV:public_path}/%{ENV:app_file} [END]
+
+</IfModule>
