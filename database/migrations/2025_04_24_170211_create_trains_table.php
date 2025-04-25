@@ -33,9 +33,6 @@ return new class extends Migration
             $table->integer('executive_price');
             $table->string('seats_available');
             $table->timestamps();
-
-            // make sure that the origin and destination are not the same
-            $table->unique(['origin_train_station_id', 'destination_train_station_id'], 'unique_origin_destination');
         });
     }
 

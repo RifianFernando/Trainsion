@@ -1,11 +1,7 @@
 import { AxiosResponse } from "axios";
 import { api } from "./axios";
-
-function csrf() {
-    return api.get("/sanctum/csrf-cookie", {
-        withCredentials: true,
-    });
-}
+import csrf from "./csrf";
+import getCSRFToken from "./lib/cookie";
 
 export const login = async (credentials: {
     email: string;
@@ -16,14 +12,7 @@ export const login = async (credentials: {
         const response = await api.post("/login", credentials, {
             withCredentials: true,
             headers: {
-                "X-XSRF-TOKEN": decodeURIComponent(
-                    document.cookie
-                        .split(";")
-                        .find((cookie) =>
-                            cookie.trim().startsWith("XSRF-TOKEN")
-                        )
-                        ?.split("=")[1] || ""
-                ),
+                "X-XSRF-TOKEN": getCSRFToken(),
             },
         });
         if (response.status === 200 || response.status === 204) {
@@ -54,14 +43,7 @@ export const register = async (data: {
         const response = await api.post("/register", data, {
             withCredentials: true,
             headers: {
-                "X-XSRF-TOKEN": decodeURIComponent(
-                    document.cookie
-                        .split(";")
-                        .find((cookie) =>
-                            cookie.trim().startsWith("XSRF-TOKEN")
-                        )
-                        ?.split("=")[1] || ""
-                ),
+                "X-XSRF-TOKEN": getCSRFToken(),
             },
         });
         if (response.status === 200 || response.status === 204) {
@@ -88,14 +70,7 @@ export const logout = async () => {
             {
                 withCredentials: true,
                 headers: {
-                    "X-XSRF-TOKEN": decodeURIComponent(
-                        document.cookie
-                            .split(";")
-                            .find((cookie) =>
-                                cookie.trim().startsWith("XSRF-TOKEN")
-                            )
-                            ?.split("=")[1] || ""
-                    ),
+                    "X-XSRF-TOKEN": getCSRFToken(),
                 },
             }
         );

@@ -5,9 +5,8 @@ const api = axios.create({
     withCredentials: true,
     headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
         "X-Requested-With": "XMLHttpRequest",
-        "Content-Type": "application/json", //change this if you need to send form data to multipart/form-data
     },
 });
 

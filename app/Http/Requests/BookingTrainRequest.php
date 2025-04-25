@@ -29,7 +29,7 @@ class BookingTrainRequest extends FormRequest
             'name' => 'required', // it's okay to be unique because 2 trains can had a different schedule and destination
             'train_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048|unique:trains,train_image',
             'description' => 'required|string',
-            'departure_time' => 'required|before:now',
+            'departure_time' => 'required|after:now',
             'origin_train_station_id' => 'required|exists:train_stations,id',
             'destination_train_station_id' => 'required|exists:train_stations,id|different:origin_train_station_id',
             'economy_price' => 'required|numeric|min:0',

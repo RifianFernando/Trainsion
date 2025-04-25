@@ -26,7 +26,10 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function(){
-        Route::prefix('/trains')->group(function () {
-            Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
-        });
+    Route::prefix('/trains')->group(function () {
+        Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
+    });
 });
+// Route::prefix('/trains')->group(function () {
+//     Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
+// });
