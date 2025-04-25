@@ -18,18 +18,15 @@ export default function Login() {
         try {
             const response = await login({ email, password });
 
-            sessionStorage.setItem("UserID", String(response.data.user.UserID));
-            sessionStorage.setItem("name", response.data.user.name);
-            sessionStorage.setItem("email", response.data.user.email);
-            sessionStorage.setItem("role", response.data.user.role);
-
             const errorStatus = response.status;
             if (errorStatus === 422) {
                 setError("Email or Password is incorrect!");
             } else if (errorStatus === 404 || errorStatus === 401) {
                 setError("unauthorized access");
-            } else {
+            } else if (errorStatus === 500) {
                 setError("server error");
+            } else if (errorStatus === 204 || errorStatus === 200) {
+                window.location.reload();
             }
         } catch (err) {
             console.error("Login error:", err);

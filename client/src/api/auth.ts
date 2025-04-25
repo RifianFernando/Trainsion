@@ -6,19 +6,64 @@ export const login = async (credentials: {
     password: string;
 }) => {
     try {
-
-        const csrf = () => api.get("/sanctum/csrf-cookie");
+        const csrf = () => api.get("/sanctum/csrf-cookie", {
+            withCredentials: true,
+        });
         await csrf();
-        const response = await api.post("/login", credentials);
-        if (response.status === 200) {
+        const response = await api.post("/login", credentials, {
+            withCredentials: true,
+            headers: {
+                "X-XSRF-TOKEN": decodeURIComponent(
+                    document.cookie.split(";").find(
+                        cookie => cookie.trim().startsWith("XSRF-TOKEN")
+                    )?.split("=")[1] || ""),
+            },
+        });
+        if (response.status === 200 || response.status === 204) {
             return response;
         } else if (response.status === 401) {
             throw new Error("Invalid credentials");
+        } else if (response.status === 422) {
+            throw new Error("Invalid credentials");
         } else {
-            throw new Error("Login failed");
+            throw new Error("Registration failed");
         }
     } catch (error) {
         console.error("Login error:", error);
+        throw error;
+    }
+};
+
+export const register = async (data: {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}) => {
+    try {
+        const csrf = () =>
+            api.get("/sanctum/csrf-cookie", {
+                withCredentials: true,
+            });
+        await csrf();
+        const response = await api.post("/register", data, {
+            withCredentials: true,
+            headers: {
+                "X-XSRF-TOKEN": decodeURIComponent(
+                    document.cookie.split(";").find(
+                        cookie => cookie.trim().startsWith("XSRF-TOKEN")
+                    )?.split("=")[1] || ""),
+            },
+        });
+        if (response.status === 200 || response.status === 204) {
+            return response;
+        } else if (response.status === 422) {
+            throw new Error("Invalid credentials");
+        } else {
+            throw new Error("Registration failed");
+        }
+    } catch (error) {
+        console.error("Registration error:", error);
         throw error;
     }
 };
@@ -81,27 +126,6 @@ export const getUserType = async (): Promise<AxiosResponse> => {
         throw error;
     }
 };
-
-export const register = async (data: {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-}) => {
-    try {
-        const response = await api.post("/register", data);
-        if (response.status === 200 || response.status === 204) {
-            return response;
-        } else if (response.status === 422) {
-            throw new Error("Invalid credentials");
-        } else {
-            throw new Error("Registration failed");
-        }
-    } catch (error) {
-        console.error("Registration error:", error);
-        throw error;
-    }
-}
 
 interface UserProps {
     name: string;
