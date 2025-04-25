@@ -1,7 +1,41 @@
+"use client";
+import { logout } from "@/api/auth";
+import { Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        const userData = sessionStorage.getItem("user");
+        const user = userData ? JSON.parse(userData) : null;
+        if (user) {
+            setUser(user);
+            console.log("User data:", user);
+        } else {
+            setUser(null);
+            console.log("No user data found");
+        }
+    }, []);
+
+    const handleLogout = async () => {
+        logout()
+            .then((response) => {
+                const status = response.status;
+                if (status === 200 || status === 204) {
+                    window.location.reload();
+                } else if (status === 401) {
+                    console.error("Unauthorized access");
+                } else {
+                    console.error("Logout failed");
+                }
+            })
+            .catch((error) => {
+                console.error("Logout error:", error);
+            });
+    };
+
     return (
         <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -21,12 +55,30 @@ export default function Navbar() {
                     </span>
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <Link
-                        href="/auth/login"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                        Login
-                    </Link>
+                    {user !== null ? (
+                        <Button
+                            onClick={handleLogout}
+                            color="warning"
+                            variant="contained"
+                        >
+                            Logout
+                        </Button>
+                    ) : (
+                        <div>
+                            <Link
+                                href="/auth/login"
+                                className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                href="/auth/register"
+                                className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                            >
+                                Register
+                            </Link>
+                        </div>
+                    )}
                     <button
                         data-collapse-toggle="navbar-sticky"
                         type="button"

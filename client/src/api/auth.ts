@@ -1,22 +1,29 @@
 import { AxiosResponse } from "axios";
 import { api } from "./axios";
 
+function csrf() {
+    return api.get("/sanctum/csrf-cookie", {
+        withCredentials: true,
+    });
+}
+
 export const login = async (credentials: {
     email: string;
     password: string;
 }) => {
     try {
-        const csrf = () => api.get("/sanctum/csrf-cookie", {
-            withCredentials: true,
-        });
         await csrf();
         const response = await api.post("/login", credentials, {
             withCredentials: true,
             headers: {
                 "X-XSRF-TOKEN": decodeURIComponent(
-                    document.cookie.split(";").find(
-                        cookie => cookie.trim().startsWith("XSRF-TOKEN")
-                    )?.split("=")[1] || ""),
+                    document.cookie
+                        .split(";")
+                        .find((cookie) =>
+                            cookie.trim().startsWith("XSRF-TOKEN")
+                        )
+                        ?.split("=")[1] || ""
+                ),
             },
         });
         if (response.status === 200 || response.status === 204) {
@@ -43,18 +50,18 @@ export const register = async (data: {
     password_confirmation: string;
 }) => {
     try {
-        const csrf = () =>
-            api.get("/sanctum/csrf-cookie", {
-                withCredentials: true,
-            });
         await csrf();
         const response = await api.post("/register", data, {
             withCredentials: true,
             headers: {
                 "X-XSRF-TOKEN": decodeURIComponent(
-                    document.cookie.split(";").find(
-                        cookie => cookie.trim().startsWith("XSRF-TOKEN")
-                    )?.split("=")[1] || ""),
+                    document.cookie
+                        .split(";")
+                        .find((cookie) =>
+                            cookie.trim().startsWith("XSRF-TOKEN")
+                        )
+                        ?.split("=")[1] || ""
+                ),
             },
         });
         if (response.status === 200 || response.status === 204) {
@@ -74,16 +81,34 @@ export const register = async (data: {
 
 export const logout = async () => {
     try {
-        const response = await api.post("/logout");
-        if (response.status === 200) {
+        await csrf();
+        const response = await api.post(
+            "/logout",
+            {},
+            {
+                withCredentials: true,
+                headers: {
+                    "X-XSRF-TOKEN": decodeURIComponent(
+                        document.cookie
+                            .split(";")
+                            .find((cookie) =>
+                                cookie.trim().startsWith("XSRF-TOKEN")
+                            )
+                            ?.split("=")[1] || ""
+                    ),
+                },
+            }
+        );
+        if (response.status === 200 || response.status === 204) {
+            sessionStorage.removeItem("user");
             return response;
         } else if (response.status === 401) {
             throw new Error("Invalid credentials");
         } else {
-            throw new Error("Login failed");
+            throw new Error("Logout failed");
         }
     } catch (error) {
-        console.error("Login error:", error);
+        console.error("Logout error:", error);
         throw error;
     }
 };
