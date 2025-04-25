@@ -6,7 +6,7 @@ use LaravelEasyRepository\BaseService;
 
 interface BookingTrainService extends BaseService{
 
-    public function createTrain($request);
+    public function createBookingTrain($request);
 
     public function getTrainByID($structureId);
 
@@ -15,4 +15,6 @@ interface BookingTrainService extends BaseService{
     public function updateTrain($request, $structureId);
 
     public function deleteTrain($structureId);
+
+    public function uploadFile($data, $file_name);
 }

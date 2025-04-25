@@ -13,22 +13,22 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
     * Don't remove or change $this->model variable name
     * @property Model|mixed $model;
     */
-    protected $model;
+    protected $train;
 
-    public function __construct(trains $model)
+    public function __construct(trains $train)
     {
-        $this->model = $model;
+        $this->train = $train;
     }
 
     // Write something awesome :)
-    public function createTrain($trainData)
+    public function createBookingTrain($trainData)
     {
-        return $this->model->create($trainData);
+        return $this->train->create($trainData);
     }
 
     public function updateTrain($trainId, $trainData)
     {
-        $train = $this->model->find($trainId);
+        $train = $this->train->find($trainId);
         if ($train) {
             $train->update($trainData);
             return $train;
@@ -38,7 +38,7 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
 
     public function deleteTrain($trainId)
     {
-        $train = $this->model->find($trainId);
+        $train = $this->train->find($trainId);
         if ($train) {
             $train->delete();
             return true;
@@ -48,11 +48,11 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
 
     public function getTrainById($trainId)
     {
-        return $this->model->find($trainId);
+        return $this->train->find($trainId);
     }
 
     public function getTrains()
     {
-        return $this->model->all();
+        return $this->train->all();
     }
 }

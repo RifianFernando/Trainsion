@@ -26,6 +26,7 @@ const api = axios.create({
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "*",
         "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "application/json", //change this if you need to send form data to multipart/form-data
     },
 });
 

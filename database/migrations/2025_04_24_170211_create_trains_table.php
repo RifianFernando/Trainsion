@@ -15,9 +15,9 @@ return new class extends Migration
         Schema::create('trains', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image_path');
+            $table->string('train_image');
             $table->string('description');
-            $table->string('departure_time');
+            $table->date('departure_time');
             $table->foreignId('origin_train_station_id')
                 ->constrained(
                     table: 'train_stations',
@@ -28,8 +28,9 @@ return new class extends Migration
                     table: 'train_stations',
                     indexName: 'destination_train_station_id_foreign'
                 );
-            $table->decimal('economy_price',9,3);
-            $table->decimal('executive_price',9,3);
+            // https://laracasts.com/discuss/channels/laravel/best-data-type-is-for-storing-money-values
+            $table->integer('economy_price');
+            $table->integer('executive_price');
             $table->string('seats_available');
             $table->timestamps();
 

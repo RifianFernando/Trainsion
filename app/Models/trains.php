@@ -11,11 +11,11 @@ class trains extends Model
 
     protected $fillable = [
         'name',
-        'image_path',
+        'train_image',
         'description',
         'departure_time',
-        'origin',
-        'destination',
+        'origin_train_station_id',
+        'destination_train_station_id',
         'economy_price',
         'executive_price',
         'seats_available'

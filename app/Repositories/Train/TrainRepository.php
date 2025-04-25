@@ -6,7 +6,7 @@ use LaravelEasyRepository\Repository;
 
 interface TrainRepository extends Repository
 {
-    public function createTrain($trainData);
+    public function createBookingTrain($trainData);
 
     public function updateTrain($trainId, $trainData);
 

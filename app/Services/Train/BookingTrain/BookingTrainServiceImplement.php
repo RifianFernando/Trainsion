@@ -22,19 +22,59 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
      * don't change $this->mainRepository variable name
      * because used in extends service class
      */
-     protected $mainRepository;
+     protected $trainRepository;
 
-    public function __construct(TrainRepository $mainRepository)
+    public function __construct(TrainRepository $trainRepository)
     {
-      $this->mainRepository = $mainRepository;
+      $this->trainRepository = $trainRepository;
+    }
+
+    public function uploadFile($data, $file_name)
+    {
+        $removeAllWhiteSpaceRegex = '/\s+/';
+        $file_name = preg_replace($removeAllWhiteSpaceRegex, '', $file_name);
+
+        $removeSpecialCharRegex = '/[@#$%^&*><`~()}{|":;?\/.,]/';
+        $file_name = preg_replace($removeSpecialCharRegex, '', $file_name);
+
+        $extension = $data->getClientOriginalExtension();
+        $fileWithExtension = $file_name . "_" . (date("YmdHis", time())) . '.' . $extension;
+        $path = $data->storeAs('/public/image/train', $fileWithExtension);
+        $data->move(public_path() . '/storage/image/train', $fileWithExtension);
+
+        return $path;
     }
 
     // Define your custom methods :)
 
-    public function createTrain($request)
+    public function createBookingTrain($request)
     {
         try {
-            return $this->mainRepository->createTrain($request);
+            $fileName =
+                $request->has('train_image')
+                ? $this->uploadFile(
+                    $request->file('train_image'),
+                    $request->name
+                )
+                : null;
+            $trainData = [
+                'name' => $request->name,
+                'train_image' => $fileName,
+                'description' => $request->description,
+                'departure_time' => $request->departure_time,
+                'origin_train_station_id' => $request->origin_train_station_id,
+                'destination_train_station_id' => $request->destination_train_station_id,
+                'economy_price' => $request->economy_price,
+                'executive_price' => $request->executive_price,
+                'seats_available' => $request->seats_available
+            ];
+
+            $result = $this->trainRepository->createBookingTrain($trainData);
+            return $this
+                    ->setMessage($this->title . " " . $this->create_message)
+                    ->setStatus(true)
+                    ->setCode(200)
+                    ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -43,7 +83,7 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     public function getTrainByID($structureId)
     {
         try {
-            return $this->mainRepository->getTrainById($structureId);
+            return $this->trainRepository->getTrainById($structureId);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -52,7 +92,7 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     public function getTrain()
     {
         try {
-            return $this->mainRepository->getTrains();
+            return $this->trainRepository->getTrains();
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -61,7 +101,7 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     public function updateTrain($request, $structureId)
     {
         try {
-            return $this->mainRepository->updateTrain($structureId, $request);
+            return $this->trainRepository->updateTrain($structureId, $request);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -70,7 +110,7 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     public function deleteTrain($structureId)
     {
         try {
-            return $this->mainRepository->deleteTrain($structureId);
+            return $this->trainRepository->deleteTrain($structureId);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
