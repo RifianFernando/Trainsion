@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingTrainRequest;
 use App\Services\Train\BookingTrain\BookingTrainService;
-// use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class BookingTrainController extends Controller
@@ -18,9 +17,9 @@ class BookingTrainController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        return $this->bookingTrainService->getTrain()->toJson();
     }
 
     /**

@@ -1,5 +1,5 @@
 "use client";
-import createBookingTrain from "@/api/bookingTrain";
+import { createBookingTrain } from "@/api/bookingTrain";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

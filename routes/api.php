@@ -21,15 +21,15 @@ use App\Http\Controllers\BookingTrainController;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::middleware(['auth:sanctum', 'isAdmin'])->group(function(){
+Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::prefix('/trains')->group(function () {
         Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
     });
 });
-// Route::prefix('/trains')->group(function () {
-//     Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
-// });
+Route::prefix('/trains')->group(function () {
+    Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');
+});

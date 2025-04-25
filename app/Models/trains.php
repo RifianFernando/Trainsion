@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class trains extends Model
 {
@@ -20,4 +22,15 @@ class trains extends Model
         'executive_price',
         'seats_available'
     ];
+
+    // https://laravel.com/docs/10.x/eloquent-relationships#one-to-many-inverse
+    public function originTrainStation(): BelongsTo
+    {
+        return $this->belongsTo(TrainStation::class);
+    }
+
+    public function destinationTrainStation(): BelongsTo
+    {
+        return $this->belongsTo(TrainStation::class);
+    }
 }

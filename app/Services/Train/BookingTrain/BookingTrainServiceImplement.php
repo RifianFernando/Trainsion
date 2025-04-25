@@ -80,23 +80,32 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
         }
     }
 
-    public function getTrainByID($structureId)
+    public function getTrain()
     {
         try {
-            return $this->trainRepository->getTrainById($structureId);
+            $result = $this->trainRepository->getTrains();
+            return $this
+                ->setStatus(true)
+                ->setCode(200)
+                ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
     }
 
-    public function getTrain()
+    public function getTrainByID($structureId)
     {
         try {
-            return $this->trainRepository->getTrains();
+            $result = $this->trainRepository->getTrainById($structureId);
+            return $this
+                ->setStatus(true)
+                ->setCode(200)
+                ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
     }
+
 
     public function updateTrain($request, $structureId)
     {

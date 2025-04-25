@@ -1,13 +1,57 @@
+"use client"
 import Link from "next/link";
 import Navbar from "../home/navbar";
 import { Button } from "@mui/material";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { getTrainList, BookingTrainList } from "@/api/bookingTrain";
+
+// const trains = [
+//     {
+//         id: 1,
+//         name: "Basic Tee",
+//         train_image: "/product-page-01-related-product-01.jpg",
+//         description: "A basic train that is easy to operate.",
+//         departure_time: "13:30 4 September 2025",
+//         departure_location: "New York, NY",
+//         destination_location: "California, CA",
+//         economy_price: "$499",
+//         executive_price: "$599",
+//         seats_available: 100,
+//     },
+//     {
+//         id: 2,
+//         name: "Basic Tee",
+//         train_image: "/product-page-01-related-product-01.jpg",
+//         description: "A basic train that is easy to operate.",
+//         departure_time: "13:30 4 September 2025",
+//         departure_location: "New York, NY",
+//         destination_location: "California, CA",
+//         economy_price: "$499",
+//         executive_price: "$599",
+//         seats_available: 100,
+//     },
+// ];
 
 export default function Dashboard() {
+    const [trains, setTrains] = useState<BookingTrainList[] | null>();
+
+    useEffect(() => {
+        getTrainList()
+            .then((response) => {
+                setTrains(response.data);
+            })
+            .catch((error) => {
+                console.error("errror fetching train data: ", error);
+                setTrains(null);
+            });
+    }, []);
+
     return (
         <div className="bg-gray-100 dark:bg-gray-900 min-h-screen">
             <Navbar />
             <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased mt-16">
-                <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
+                <div className="mx-auto max-w-screen-2xl">
                     <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                         <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                             <div className="w-full md:w-1/2">
@@ -73,175 +117,150 @@ export default function Dashboard() {
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-4 py-4">
-                                            Product name
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-4 text-nowrap"
+                                        >
+                                            No
                                         </th>
-                                        <th scope="col" className="px-4 py-3">
-                                            Category
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-4 text-nowrap"
+                                        >
+                                            Train Name
                                         </th>
-                                        <th scope="col" className="px-4 py-3">
-                                            Brand
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Train image
                                         </th>
-                                        <th scope="col" className="px-4 py-3">
+                                        <th
+                                            scope="col"
+                                            className="px-15 py-3 text-nowrap"
+                                        >
                                             Description
                                         </th>
-                                        <th scope="col" className="px-4 py-3">
-                                            Price
+                                        <th
+                                            scope="col"
+                                            className="px-20 py-3 text-nowrap"
+                                        >
+                                            Departure Time
                                         </th>
-                                        <th scope="col" className="px-4 py-3">
-                                            Actions
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Departure Location
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Destination Location
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Economy Price
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Executive Price
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Seats Available
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-4 py-3 text-nowrap"
+                                        >
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr className="border-b dark:border-gray-700">
-                                        <th
-                                            scope="row"
-                                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            Monitor BenQ EX2710Q
-                                        </th>
-                                        <td className="px-4 py-3">
-                                            TV/Monitor
-                                        </td>
-                                        <td className="px-4 py-3">BenQ</td>
-                                        <td className="px-4 py-3 max-w-[12rem] truncate">
-                                            What is a product description? A
-                                            product description describes a
-                                            product.
-                                        </td>
-                                        <td className="px-4 py-3">$499</td>
-                                        <td className="px-4 py-3 flex items-center justify-center gap-4">
-                                            <Button
-                                                variant="contained"
-                                                title="Actions"
-                                                id="monitor-benq-ex2710q-dropdown-button"
-                                                data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
-                                                type="button"
+                                    {trains == null ? (
+                                        <div>null value</div>
+                                    ) : (
+                                        trains.map((train) => (
+                                            <tr
+                                                className="border-b dark:border-gray-700"
+                                                key={train.id}
                                             >
-                                                Update
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                id="monitor-benq-ex2710q-dropdown"
-                                                aria-labelledby="monitor-benq-ex2710q-dropdown-button"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                    <tr className="border-b dark:border-gray-700">
-                                        <th
-                                            scope="row"
-                                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            Monitor BenQ EX2710Q
-                                        </th>
-                                        <td className="px-4 py-3">
-                                            TV/Monitor
-                                        </td>
-                                        <td className="px-4 py-3">BenQ</td>
-                                        <td className="px-4 py-3 max-w-[12rem] truncate">
-                                            What is a product description? A
-                                            product description describes a
-                                            product.
-                                        </td>
-                                        <td className="px-4 py-3">$499</td>
-                                        <td className="px-4 py-3 flex items-center justify-center gap-4">
-                                            <Button
-                                                variant="contained"
-                                                title="Actions"
-                                                id="monitor-benq-ex2710q-dropdown-button"
-                                                data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
-                                                type="button"
-                                            >
-                                                Update
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                id="monitor-benq-ex2710q-dropdown"
-                                                aria-labelledby="monitor-benq-ex2710q-dropdown-button"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                    <tr className="border-b dark:border-gray-700">
-                                        <th
-                                            scope="row"
-                                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            Monitor BenQ EX2710Q
-                                        </th>
-                                        <td className="px-4 py-3">
-                                            TV/Monitor
-                                        </td>
-                                        <td className="px-4 py-3">BenQ</td>
-                                        <td className="px-4 py-3 max-w-[12rem] truncate">
-                                            What is a product description? A
-                                            product description describes a
-                                            product.
-                                        </td>
-                                        <td className="px-4 py-3">$499</td>
-                                        <td className="px-4 py-3 flex items-center justify-center gap-4">
-                                            <Button
-                                                variant="contained"
-                                                title="Actions"
-                                                id="monitor-benq-ex2710q-dropdown-button"
-                                                data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
-                                                type="button"
-                                            >
-                                                Update
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                id="monitor-benq-ex2710q-dropdown"
-                                                aria-labelledby="monitor-benq-ex2710q-dropdown-button"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                    <tr className="border-b dark:border-gray-700">
-                                        <th
-                                            scope="row"
-                                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                        >
-                                            Monitor BenQ EX2710Q
-                                        </th>
-                                        <td className="px-4 py-3">
-                                            TV/Monitor
-                                        </td>
-                                        <td className="px-4 py-3">BenQ</td>
-                                        <td className="px-4 py-3 max-w-[12rem] truncate">
-                                            What is a product description? A
-                                            product description describes a
-                                            product.
-                                        </td>
-                                        <td className="px-4 py-3">$499</td>
-                                        <td className="px-4 py-3 flex items-center justify-center gap-4">
-                                            <Button
-                                                variant="contained"
-                                                title="Actions"
-                                                id="monitor-benq-ex2710q-dropdown-button"
-                                                data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
-                                                type="button"
-                                            >
-                                                Update
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="warning"
-                                                id="monitor-benq-ex2710q-dropdown"
-                                                aria-labelledby="monitor-benq-ex2710q-dropdown-button"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
+                                                <td className="px-4 py-3">1</td>
+                                                <th
+                                                    scope="row"
+                                                    className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                                >
+                                                    {train.name}
+                                                </th>
+                                                <td className="px-4 py-3">
+                                                    <Image
+                                                        alt={`Train image of ${train.name}`}
+                                                        src={train.train_image}
+                                                        className="rounded-full"
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {train.description}
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {train.departure_time}
+                                                </td>
+                                                <td className="px-4 py-3 text-center max-w-[12rem] truncate">
+                                                    {
+                                                        train
+                                                            .origin_train_station
+                                                            .name
+                                                    }
+                                                </td>
+                                                <td className="px-4 py-3 text-center max-w-[12rem] truncate">
+                                                    {
+                                                        train
+                                                            .destination_train_station
+                                                            .name
+                                                    }
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {train.economy_price}
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {train.executive_price}
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {train.seats_available}
+                                                </td>
+                                                <td className="px-4 py-3 flex items-center justify-center gap-4 h-max">
+                                                    <Button
+                                                        variant="contained"
+                                                        title="Actions"
+                                                        id="monitor-benq-ex2710q-dropdown-button"
+                                                        data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
+                                                        type="button"
+                                                    >
+                                                        Update
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="warning"
+                                                        id="monitor-benq-ex2710q-dropdown"
+                                                        aria-labelledby="monitor-benq-ex2710q-dropdown-button"
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
                                 </tbody>
                             </table>
                         </div>
