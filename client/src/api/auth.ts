@@ -20,6 +20,8 @@ export const login = async (credentials: {
             },
         });
         if (response.status === 200 || response.status === 204) {
+            const userData = await getUserInfo();
+            sessionStorage.setItem("user", JSON.stringify(userData.data));
             return response;
         } else if (response.status === 401) {
             throw new Error("Invalid credentials");
@@ -56,6 +58,8 @@ export const register = async (data: {
             },
         });
         if (response.status === 200 || response.status === 204) {
+            const userData = await getUserInfo();
+            sessionStorage.setItem("user", JSON.stringify(userData.data));
             return response;
         } else if (response.status === 422) {
             throw new Error("Invalid credentials");
