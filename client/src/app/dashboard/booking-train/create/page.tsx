@@ -1,7 +1,9 @@
 "use client";
 import { createBookingTrain } from "@/api/bookingTrain";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getListStation, StationProps } from "@/api/trainStation";
+import { getUserInfo } from "@/api/auth";
 
 interface inputProps {
     name: string;
@@ -25,20 +27,6 @@ interface errorProps {
     executive_price: Array<string> | null;
     seats_available: Array<string> | null;
 }
-const station = [
-    {
-        id: 1,
-        name: "Jakarta",
-    },
-    {
-        id: 2,
-        name: "Bandung",
-    },
-    {
-        id: 3,
-        name: "Surabaya",
-    },
-];
 
 export default function BookingTrainCreatePage() {
     // const [form, setForm] = useState<inputProps>({
@@ -52,6 +40,7 @@ export default function BookingTrainCreatePage() {
     //     executive_price: "",
     //     seats_available: "",
     // });
+    const [station, setStation] = useState<StationProps[]>([]);
     const [form, setForm] = useState<inputProps>({
         name: "Wicaksono Utara Train",
         train_image: null,
@@ -76,6 +65,21 @@ export default function BookingTrainCreatePage() {
     });
     const router = useRouter();
 
+    useEffect(() => {
+        getUserInfo().then((response) => {
+            const Status = response.status;
+            if (Status === 200) {
+                const isAdmin = response.data.isAdmin;
+                if (!isAdmin) {
+                    router.push("/");
+                }
+            }
+        });
+        getListStation().then((response) => {
+            setStation(response.data);
+        });
+    }, [router]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -92,8 +96,18 @@ export default function BookingTrainCreatePage() {
                 }
             })
             .catch((error) => {
-                if (error.status === 401) {
-                    router.push("/auth/login");
+                if (error.status === 401 || error.status === 403) {
+                    setError({
+                        name: ["ure not admin"],
+                        train_image: ["ure not admin"],
+                        description: ["ure not admin"],
+                        departure_time: ["ure not admin"],
+                        origin_train_station_id: ["ure not admin"],
+                        destination_train_station_id: ["ure not admin"],
+                        economy_price: ["ure not admin"],
+                        executive_price: ["ure not admin"],
+                        seats_available: ["ure not admin"],
+                    });
                 } else {
                     setError(error.response.data.errors);
                 }

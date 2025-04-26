@@ -20,6 +20,7 @@ export default async function Dashboard() {
     //             setTrains(null);
     //         });
     // }, []);
+
     const response = await getTrainList();
     const trains: BookingTrainList[] = response.data;
 
@@ -222,15 +223,6 @@ export default async function Dashboard() {
                                                 >
                                                     Update
                                                 </Link>
-                                                {/* <Button
-                                                    onClick={() => handleDeleteTrain(train.id)}
-                                                    variant="contained"
-                                                    color="warning"
-                                                    id="monitor-benq-ex2710q-dropdown"
-                                                    aria-labelledby="monitor-benq-ex2710q-dropdown-button"
-                                                >
-                                                    Delete
-                                                </Button> */}
                                                 <DeleteTrainButton
                                                     trainID={train.id}
                                                 />
