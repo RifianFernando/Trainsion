@@ -1,103 +1,36 @@
-"use client";
-import { createBookingTrain } from "@/api/bookingTrain";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {  BookingTrainList, getTrainByID } from "@/api/bookingTrain";
 
-interface inputProps {
-    name: string;
-    train_image: File | null;
-    description: string;
-    departure_time: string;
-    origin_train_station_id: string;
-    destination_train_station_id: string;
-    economy_price: string;
-    executive_price: string;
-    seats_available: string;
-}
-interface errorProps {
-    name: Array<string> | null;
-    train_image: Array<string> | null;
-    description: Array<string> | null;
-    departure_time: Array<string> | null;
-    origin_train_station_id: Array<string> | null;
-    destination_train_station_id: Array<string> | null;
-    economy_price: Array<string> | null;
-    executive_price: Array<string> | null;
-    seats_available: Array<string> | null;
-}
-const station = [
-    {
-        id: 1,
-        name: "Jakarta",
-    },
-    {
-        id: 2,
-        name: "Bandung",
-    },
-    {
-        id: 3,
-        name: "Surabaya",
-    },
-];
-
-export default function BookingTrainCreatePage() {
-    // const [form, setForm] = useState<inputProps>({
-    //     name: "",
-    //     train_image: null,
-    //     description: "",
-    //     departure_time: "",
-    //     origin_train_station_id: "",
-    //     destination_train_station_id: "",
-    //     economy_price: "",
-    //     executive_price: "",
-    //     seats_available: "",
-    // });
-    const [form, setForm] = useState<inputProps>({
-        name: "Wicaksono Utara Train",
-        train_image: null,
-        description: "Wicaksono Description",
-        departure_time: "2025-10-06T10:00",
-        origin_train_station_id: "1",
-        destination_train_station_id: "2",
-        economy_price: "3000",
-        executive_price: "6000",
-        seats_available: "100",
-    });
-    const [error, setError] = useState<errorProps>({
-        name: null,
-        train_image: null,
-        description: null,
-        departure_time: null,
-        origin_train_station_id: null,
-        destination_train_station_id: null,
-        economy_price: null,
-        executive_price: null,
-        seats_available: null,
-    });
-    const router = useRouter();
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ param: string }>;
+}) {
+    const { param } = await params;
+    const response = await getTrainByID(param)
+    const train: BookingTrainList = response.data;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData = new FormData();
+        // const formData = new FormData();
 
-        for (const [key, value] of Object.entries(form)) {
-            formData.append(key, value);
-        }
-        createBookingTrain(formData)
-            .then((response) => {
-                const status = response.status;
-                if (status === 200 || status === 201) {
-                    router.push("/dashboard");
-                }
-            })
-            .catch((error) => {
-                if (error.status === 401) {
-                    router.push("/auth/login");
-                } else {
-                    setError(error.response.data.errors);
-                }
-            });
+        // for (const [key, value] of Object.entries(form)) {
+        //     formData.append(key, value);
+        // }
+        // createBookingTrain(formData)
+        //     .then((response) => {
+        //         const status = response.status;
+        //         if (status === 200 || status === 201) {
+        //             router.push("/dashboard");
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         if (error.status === 401) {
+        //             router.push("/auth/login");
+        //         } else {
+        //             setError(error.response.data.errors);
+        //         }
+        //     });
     };
 
     return (
@@ -113,13 +46,12 @@ export default function BookingTrainCreatePage() {
                     type="text"
                     id="name"
                     name="name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    defaultValue={train.name}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Cargo Express"
                     required
                 />
-                <strong className="font-bold text-red-600">{error.name}</strong>
+                {/* <strong className="font-bold text-red-600">{error.name}</strong> */}
             </div>
             <div className="mb-5">
                 <label
@@ -130,14 +62,6 @@ export default function BookingTrainCreatePage() {
                 </label>
                 <input
                     id="train_image"
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            train_image: e.target.files
-                                ? e.target.files[0]
-                                : null,
-                        })
-                    }
                     accept="image/*"
                     placeholder="Upload train image"
                     required
@@ -146,9 +70,9 @@ export default function BookingTrainCreatePage() {
                     aria-describedby="user_avatar_help"
                     type="file"
                 />
-                <strong className="font-bold text-red-600">
+                {/* <strong className="font-bold text-red-600">
                     {error.train_image}
-                </strong>
+                </strong> */}
             </div>
             <div className="mb-5">
                 <label
@@ -161,18 +85,15 @@ export default function BookingTrainCreatePage() {
                     rows={4}
                     placeholder="Write a short description about the train"
                     name="description"
-                    value={form.description}
-                    onChange={(e) =>
-                        setForm({ ...form, description: e.target.value })
-                    }
+                    defaultValue={train.description}
                     id="description"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                 />
 
-                <strong className="font-bold text-red-600">
+                {/* <strong className="font-bold text-red-600">
                     {error.description}
-                </strong>
+                </strong> */}
             </div>
             <div className="mb-5">
                 <label
@@ -183,18 +104,15 @@ export default function BookingTrainCreatePage() {
                 </label>
                 <input
                     name="departure_time"
-                    value={form.departure_time}
-                    onChange={(e) =>
-                        setForm({ ...form, departure_time: e.target.value })
-                    }
+                    defaultValue={train.departure_time}
                     type="datetime-local"
                     id="departure_time"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                 />
-                <strong className="font-bold text-red-600">
+                {/* <strong className="font-bold text-red-600">
                     {error.departure_time}
-                </strong>
+                </strong> */}
             </div>
             <div className="mb-5">
                 <label
@@ -208,13 +126,7 @@ export default function BookingTrainCreatePage() {
                     name="origin_train_station_id"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                    value={form.origin_train_station_id || ""}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            origin_train_station_id: e.target.value,
-                        })
-                    }
+                    defaultValue={train.origin_train_station.id || ""}
                 >
                     <option value="" disabled hidden>
                         Choose a Station

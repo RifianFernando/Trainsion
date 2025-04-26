@@ -48,6 +48,14 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
         return $modifiedResult;
     }
 
+    public function getTrainById($trainId)
+    {
+        return $this->train->with([
+            'originTrainStation',
+            'destinationTrainStation'
+        ])->find($trainId);
+    }
+
     public function updateTrain($trainId, $trainData)
     {
         $train = $this->train->find($trainId);
@@ -66,10 +74,5 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
             return true;
         }
         return false;
-    }
-
-    public function getTrainById($trainId)
-    {
-        return $this->train->find($trainId);
     }
 }

@@ -31,10 +31,18 @@ class BookingTrainController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get BookingTrainByID
      */
-    public function store(BookingTrainRequest $request)
+    public function getBookingTrainByID($trainID): JsonResponse
     {
-        //
+        return $this->bookingTrainService->getTrainByID($trainID)->toJson();
+    }
+
+    /**
+     * Delete Booking Train
+     */
+    public function destroy($trainID): JsonResponse
+    {
+        return $this->bookingTrainService->deleteTrain($trainID)->toJson();
     }
 }

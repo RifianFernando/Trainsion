@@ -52,3 +52,36 @@ export async function getTrainList(): Promise<TrainProps> {
         throw error;
     }
 }
+interface TrainIDProps {
+    data: BookingTrainList;
+}
+
+export async function getTrainByID(trainID: string): Promise<TrainIDProps> {
+    try {
+        const response: AxiosResponse<TrainIDProps> = await api.get(
+            `api/trains/${trainID}`
+        );
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteTrainByID(trainID: string) {
+    try {
+        const response: AxiosResponse = await api.delete(
+            `/api/trains/${trainID}`,
+            {
+                withCredentials: true,
+                headers: {
+                    "X-XSRF-TOKEN": getCSRFToken(),
+                },
+            }
+        );
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}

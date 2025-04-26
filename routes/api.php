@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\BookingTrainController;
+use App\Http\Controllers\TrainStationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,15 +22,21 @@ use App\Http\Controllers\BookingTrainController;
 |
 */
 
-// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::prefix('/trains')->group(function () {
         Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
+        Route::delete('/{tid}', [BookingTrainController::class, 'destroy'])->name('deleteTrainBooking');
     });
 });
 Route::prefix('/trains')->group(function () {
     Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');
+    Route::get('/{tid}', [BookingTrainController::class, 'getBookingTrainByID'])->name('listTrain');
 });
+Route::prefix('/station')->group(function () {
+    Route::get('', [TrainStationController::class, 'index'])->name('listStation');
+});
+

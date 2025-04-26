@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\TrainStation;
+use App\Services\Train\TrainStation\TrainStationService;
 use Illuminate\Http\Request;
 
 class TrainStationController extends Controller
 {
+    protected $trainStationService;
+
+    public function __construct(TrainStationService $trainStationService) {
+        $this->trainStationService = $trainStationService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return $this->trainStationService->getListStation()->toJson();
     }
 
     /**

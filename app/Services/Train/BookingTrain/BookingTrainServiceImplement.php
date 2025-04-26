@@ -18,15 +18,15 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     protected $create_message = "successfully created";
     protected $update_message = "successfully updated";
     protected $delete_message = "successfully deleted";
-     /**
+    /**
      * don't change $this->mainRepository variable name
      * because used in extends service class
      */
-     protected $trainRepository;
+    protected $trainRepository;
 
     public function __construct(TrainRepository $trainRepository)
     {
-      $this->trainRepository = $trainRepository;
+        $this->trainRepository = $trainRepository;
     }
 
     public function uploadFile($data, $file_name)
@@ -71,10 +71,10 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
 
             $result = $this->trainRepository->createBookingTrain($trainData);
             return $this
-                    ->setMessage($this->title . " " . $this->create_message)
-                    ->setStatus(true)
-                    ->setCode(200)
-                    ->setResult($result);
+                ->setMessage($this->title . " " . $this->create_message)
+                ->setStatus(true)
+                ->setCode(200)
+                ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
@@ -93,10 +93,10 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
         }
     }
 
-    public function getTrainByID($structureId)
+    public function getTrainByID($trainID)
     {
         try {
-            $result = $this->trainRepository->getTrainById($structureId);
+            $result = $this->trainRepository->getTrainById($trainID);
             return $this
                 ->setStatus(true)
                 ->setCode(200)
@@ -119,7 +119,11 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     public function deleteTrain($structureId)
     {
         try {
-            return $this->trainRepository->deleteTrain($structureId);
+            $this->trainRepository->deleteTrain($structureId);
+            return $this
+                ->setMessage($this->title . " " . $this->delete_message)
+                ->setStatus(true)
+                ->setCode(200);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
