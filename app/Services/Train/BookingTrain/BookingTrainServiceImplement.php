@@ -4,6 +4,7 @@ namespace App\Services\Train\BookingTrain;
 
 use LaravelEasyRepository\ServiceApi;
 use App\Repositories\Train\TrainRepository;
+use Illuminate\Support\Facades\Storage;
 
 class BookingTrainServiceImplement extends ServiceApi implements BookingTrainService
 {
@@ -107,10 +108,34 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
     }
 
 
-    public function updateTrain($request, $structureId)
+    public function updateBookingTrain($request, $trainId)
     {
         try {
-            return $this->trainRepository->updateTrain($structureId, $request);
+            $train = $this->trainRepository->getTrainById($trainId);
+            Storage::delete($train->train_image);
+            $fileName =
+                $request->has('train_image')
+                ? $this->uploadFile($request->file('train_image'), $request->name)
+                : null;
+            $trainData = [
+                'name' => $request->name,
+                'train_image' => $fileName,
+                'description' => $request->description,
+                'departure_time' => $request->departure_time,
+                'origin_train_station_id' => $request->origin_train_station_id,
+                'destination_train_station_id' => $request->destination_train_station_id,
+                'economy_price' => $request->economy_price,
+                'executive_price' => $request->executive_price,
+                'seats_available' => $request->seats_available
+            ];
+            $result = $this->trainRepository->updateBookingTrain($trainData, $trainId);
+            return $this
+                ->setMessage(
+                    $this->title . " " . $this->create_message
+                )
+                ->setStatus(true)
+                ->setCode(200)
+                ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }

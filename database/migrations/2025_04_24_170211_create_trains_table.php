@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('train_image');
             $table->string('description');
-            $table->date('departure_time');
+            $table->dateTime('departure_time');
             $table->foreignId('origin_train_station_id')
                 ->constrained(
                     table: 'train_stations',

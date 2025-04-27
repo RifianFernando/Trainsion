@@ -39,6 +39,14 @@ class BookingTrainController extends Controller
     }
 
     /**
+     * Update BookingTrain.
+     */
+    public function update(BookingTrainRequest $request, $trainID): JsonResponse
+    {
+        return $this->bookingTrainService->updateBookingTrain($request, $trainID)->toJson();
+    }
+
+    /**
      * Delete Booking Train
      */
     public function destroy($trainID): JsonResponse

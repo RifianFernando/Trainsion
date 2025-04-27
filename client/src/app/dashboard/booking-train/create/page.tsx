@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getListStation, StationProps } from "@/api/trainStation";
 import { getUserInfo } from "@/api/auth";
+import Image from "next/image";
 
 interface inputProps {
     name: string;
@@ -142,6 +143,16 @@ export default function BookingTrainCreatePage() {
                 >
                     Upload train image
                 </label>
+                {form.train_image ? (
+                    <Image
+                        src={URL.createObjectURL(form.train_image)}
+                        alt="Uploaded Poster"
+                        width={700}
+                        height={0}
+                        className="rounded-md object-cover xl:h-[400px]"
+                        priority={true}
+                    />
+                ) : null}
                 <input
                     id="train_image"
                     onChange={(e) =>

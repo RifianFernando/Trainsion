@@ -12,7 +12,7 @@ interface BookingTrainService extends BaseService{
 
     public function getTrain();
 
-    public function updateTrain($request, $structureId);
+    public function updateBookingTrain($request, $trainId);
 
     public function deleteTrain($structureId);
 

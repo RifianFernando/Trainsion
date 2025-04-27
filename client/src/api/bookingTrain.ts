@@ -20,6 +20,28 @@ export async function createBookingTrain(
     }
 }
 
+export async function updateBookingTrain(
+    formData: FormData,
+    trainID: string
+): Promise<AxiosResponse> {
+    try {
+        await csrf();
+        const response = await api.post(
+            `/api/trains/update/${trainID}`,
+            formData,
+            {
+                headers: {
+                    "X-XSRF-TOKEN": getCSRFToken(),
+                },
+            }
+        );
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export interface BookingTrainList {
     id: string;
     name: string;

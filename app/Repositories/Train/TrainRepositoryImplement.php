@@ -50,20 +50,18 @@ class TrainRepositoryImplement extends Eloquent implements TrainRepository
 
     public function getTrainById($trainId)
     {
-        return $this->train->with([
+        $result = $this->train->with([
             'originTrainStation',
             'destinationTrainStation'
         ])->find($trainId);
+        $result->train_image = url(Storage::url($result->train_image));
+
+        return $result;
     }
 
-    public function updateTrain($trainId, $trainData)
+    public function updateBookingTrain($trainData, $trainId)
     {
-        $train = $this->train->find($trainId);
-        if ($train) {
-            $train->update($trainData);
-            return $train;
-        }
-        return null;
+        return $this->train->findOrFail($trainId)->update($trainData);
     }
 
     public function deleteTrain($trainId)

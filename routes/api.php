@@ -30,6 +30,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::prefix('/trains')->group(function () {
         Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
         Route::delete('/{tid}', [BookingTrainController::class, 'destroy'])->name('deleteTrainBooking');
+        Route::post('/update/{tid}', [BookingTrainController::class, 'update'])->name('updateBookingTrain');
     });
 });
 Route::prefix('/trains')->group(function () {
@@ -39,4 +40,3 @@ Route::prefix('/trains')->group(function () {
 Route::prefix('/station')->group(function () {
     Route::get('', [TrainStationController::class, 'index'])->name('listStation');
 });
-

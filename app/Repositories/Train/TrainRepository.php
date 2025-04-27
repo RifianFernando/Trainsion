@@ -8,7 +8,7 @@ interface TrainRepository extends Repository
 {
     public function createBookingTrain($trainData);
 
-    public function updateTrain($trainId, $trainData);
+    public function updateBookingTrain($trainId, $trainData);
 
     public function deleteTrain($trainId);
 

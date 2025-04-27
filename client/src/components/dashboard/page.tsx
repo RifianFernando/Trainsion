@@ -216,7 +216,7 @@ export default async function Dashboard() {
                                             </td>
                                             <td className="px-4 py-3 flex items-center justify-center gap-4 h-max">
                                                 <Link
-                                                    href={`/dashboard/booking-train/update/${train.id}`}
+                                                    href={`/dashboard/booking-train/update?trainID=${train.id}`}
                                                     id="monitor-benq-ex2710q-dropdown-button"
                                                     data-dropdown-toggle="monitor-benq-ex2710q-dropdown"
                                                     type="button"
