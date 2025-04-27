@@ -2,64 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingTicketRequest;
 use App\Models\BookingTicket;
+use App\Services\BookingTicket\BookingTicketService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BookingTicketController extends Controller
 {
+    protected $bookingTrainService;
+
+    public function __construct(BookingTicketService $bookingTrainService)
+    {
+        $this->bookingTrainService = $bookingTrainService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    // public function index(): JsonResponse
+    // {
+    //     return $this->bookingTrainService->getTrain()->toJson();
+    // }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(BookingTicketRequest $request): JsonResponse
     {
-        //
+        return $this->bookingTrainService->createBookingTicket($request)->toJson();
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get BookingTrainByID
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function getBookingTrainByID($trainID): JsonResponse
+    // {
+    //     return $this->bookingTrainService->getTrainByID($trainID)->toJson();
+    // }
 
     /**
-     * Display the specified resource.
+     * Update BookingTrain.
      */
-    public function show(BookingTicket $bookingTicket)
-    {
-        //
-    }
+    // public function update(BookingTrainRequest $request, $trainID): JsonResponse
+    // {
+    //     return $this->bookingTrainService->updateBookingTrain($request, $trainID)->toJson();
+    // }
 
     /**
-     * Show the form for editing the specified resource.
+     * Delete Booking Train
      */
-    public function edit(BookingTicket $bookingTicket)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, BookingTicket $bookingTicket)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(BookingTicket $bookingTicket)
-    {
-        //
-    }
+    // public function destroy($trainID): JsonResponse
+    // {
+    //     return $this->bookingTrainService->deleteTrain($trainID)->toJson();
+    // }
 }

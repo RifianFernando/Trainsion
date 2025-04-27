@@ -7,7 +7,6 @@ import { ChangeEvent, use, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { getTrainByID } from "@/api/bookingTrain";
-import Image from "next/image";
 
 interface errorProps {
     attribute: string;
@@ -184,9 +183,7 @@ export default function BookingTrainPage({
         { economy: 0, executive: 0 }
     );
 
-    const handleCheckout = () => {
-
-    }
+    const handleCheckout = () => {};
 
     return (
         <div className="flex m-10 flex-col gap-5">
