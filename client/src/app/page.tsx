@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Navbar from '../components/home/navbar';
 import { BookingTrainList, getTrainList } from "@/api/bookingTrain";
+import { Button } from "@mui/material";
 
 export default async function Home() {
     const trains = await getTrainList();
@@ -33,12 +34,19 @@ export default async function Home() {
                                         {trains.name}
                                     </h3>
                                     <p className="mt-1 text-sm text-gray-500">
-                                        {trains.departure_time}
+                                        Departure {trains.departure_time}
                                     </p>
                                 </div>
                                 <p className="text-sm font-medium text-gray-900">
-                                    {trains.economy_price}
+                                    start from{" "}
+                                    {new Intl.NumberFormat("id-ID", {
+                                        style: "currency",
+                                        currency: "IDR",
+                                    }).format(trains.economy_price)}
                                 </p>
+                            </div>
+                            <div className="mt-4 flex justify-between">
+                                <Button href={`/detail-train/${trains.id}`} variant="contained">Select Train</Button>
                             </div>
                         </div>
                     ))}

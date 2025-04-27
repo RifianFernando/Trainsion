@@ -19,5 +19,11 @@ class AdminSeeder extends Seeder
             'password' =>bcrypt('ThePowerOfAdmin2025'),
             'isAdmin'=> true,
         ]);
+        DB::table('users')->insert([
+            'name' => 'Rifian Fernando',
+            'email' => 'rifianfernando19@gmail.com',
+            'password' => bcrypt('SmoothyShake'),
+            'isAdmin' => false,
+        ]);
     }
 }

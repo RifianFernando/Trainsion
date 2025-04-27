@@ -5,10 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class History extends Model
+class BookingTicket extends Model
 {
     use HasFactory;
-    protected $fillable=[
-        'history_year', 'history_description', 'history_image'
+
+    protected $fillable = [
+        'name',
+        'email',
+        'phone_number',
+        'class',
+        'status'
     ];
 }
