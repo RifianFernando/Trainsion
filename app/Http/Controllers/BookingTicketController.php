@@ -7,6 +7,7 @@ use App\Models\BookingTicket;
 use App\Services\BookingTicket\BookingTicketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingTicketController extends Controller
 {
@@ -29,7 +30,8 @@ class BookingTicketController extends Controller
      */
     public function create(BookingTicketRequest $request): JsonResponse
     {
-        return $this->bookingTrainService->createBookingTicket($request)->toJson();
+        $user = Auth::user();
+        return $this->bookingTrainService->createBookingTicket($request, $user)->toJson();
     }
 
     /**

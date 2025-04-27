@@ -5,6 +5,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\StructureController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\BookingTicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactUsController;
@@ -26,17 +27,25 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
-    Route::prefix('/trains')->group(function () {
-        Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
-        Route::delete('/{tid}', [BookingTrainController::class, 'destroy'])->name('deleteTrainBooking');
-        Route::post('/update/{tid}', [BookingTrainController::class, 'update'])->name('updateBookingTrain');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['isAdmin'])->group(function () {
+        Route::prefix('/trains')->group(function () {
+            Route::post('', [BookingTrainController::class, 'create'])->name('createTrainBooking');
+            Route::delete('/{tid}', [BookingTrainController::class, 'destroy'])->name('deleteTrainBooking');
+            Route::post('/update/{tid}', [BookingTrainController::class, 'update'])->name('updateBookingTrain');
+        });
     });
+
 });
+Route::prefix('/booking-ticket')->group(function () {
+    Route::post('', [BookingTicketController::class, 'create'])->name('createBookingTicket');
+});
+
 Route::prefix('/trains')->group(function () {
     Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');
     Route::get('/{tid}', [BookingTrainController::class, 'getBookingTrainByID'])->name('listTrain');
 });
+
 Route::prefix('/station')->group(function () {
     Route::get('', [TrainStationController::class, 'index'])->name('listStation');
 });

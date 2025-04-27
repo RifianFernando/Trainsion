@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BookingTicketRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class BookingTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,19 @@ class BookingTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'trainID' => 'required|integer',
+            'userData' => 'required|array',
+            'userData.*.name' => 'required|string',
+            'userData.*.email' => 'required|email:rfc',
+            'userData.*.phone_number' => 'required|string|max:15',
+            'userData.*.class' => ['required', Rule::in(['Economy', 'Executive'])],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'userData.*.class.in' => 'class is between executive class or economy class'
         ];
     }
 }

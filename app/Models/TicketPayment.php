@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BookingTicket extends Model
+class TicketPayment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'phone_number',
-        'class',
+        'payment_proof_img',
+        'status',
         'user_booking_ticket_id'
     ];
 

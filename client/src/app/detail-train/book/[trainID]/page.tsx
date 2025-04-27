@@ -2,23 +2,20 @@
 import { getUserInfo } from "@/api/auth";
 import { Button, TextField } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { redirect } from "next/navigation";
 import { ChangeEvent, use, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { getTrainByID } from "@/api/bookingTrain";
+import { useRouter } from "next/navigation";
+import { createUserBookingTicket, userTicketProps } from "@/api/bookingTicket";
 
 interface errorProps {
     attribute: string;
     message: string;
 }
 
-interface ticketProps {
+interface ticketProps extends userTicketProps {
     id: number;
-    name: string;
-    email: string;
-    phone_number: string;
-    class: string;
     error: errorProps[];
 }
 
@@ -38,33 +35,36 @@ export default function BookingTrainPage({
         executive: 0,
     });
     const { trainID } = use(params);
+    const router = useRouter();
 
     useEffect(() => {
-        getUserInfo().then((response) => {
-            const Status = response.status;
-            if (Status !== 200) {
-                sessionStorage.clear();
-                redirect("/auth/login");
-            }
-            const data = response.data;
-            setTicket([
-                {
-                    id: 1,
-                    name: data.name,
-                    email: data.email,
-                    phone_number: "",
-                    class: "Economy",
-                    error: [],
-                },
-            ]);
-        });
+        getUserInfo()
+            .then((response) => {
+                const data = response.data;
+                setTicket([
+                    {
+                        id: 1,
+                        name: data.name,
+                        email: data.email,
+                        phone_number: "",
+                        class: "Economy",
+                        error: [],
+                    },
+                ]);
+            })
+            .catch((error) => {
+                if (error.status !== 200) {
+                    sessionStorage.clear();
+                    router.push("/auth/login");
+                }
+            });
         getTrainByID(trainID).then((response) => {
             setPrice({
                 economy: response.data.economy_price,
                 executive: response.data.executive_price,
             });
         });
-    }, [trainID]);
+    }, [trainID, router]);
     const [confirmed, setConfirmed] = useState<boolean>(false);
     const handleDeletePassengerTicket = (id: number) => {
         setTicket((l) => l.filter((ticket) => ticket.id !== id));
@@ -183,7 +183,18 @@ export default function BookingTrainPage({
         { economy: 0, executive: 0 }
     );
 
-    const handleCheckout = () => {};
+    const handleCheckout = async () => {
+        const transformedData = {
+            trainID,
+            userData: ticket
+        }
+        createUserBookingTicket(transformedData)
+            .then((response) => {
+                if (response.status == 200) {
+                    router.push('/');
+                };
+            })
+    };
 
     return (
         <div className="flex m-10 flex-col gap-5">

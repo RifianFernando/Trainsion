@@ -12,6 +12,15 @@ class UserBookingTickets extends Model
     protected $fillable = [
         'user_id',
         'train_id',
-        'booking_ticket_id'
     ];
+
+    public function bookingTickets()
+    {
+        return $this->hasMany(BookingTicket::class, 'user_booking_ticket_id');
+    }
+
+    public function paymentTickets()
+    {
+        return $this->hasMany(TicketPayment::class, 'user_booking_ticket_id');
+    }
 }

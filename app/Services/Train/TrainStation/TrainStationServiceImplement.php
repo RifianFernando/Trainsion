@@ -5,7 +5,8 @@ namespace App\Services\Train\TrainStation;
 use LaravelEasyRepository\ServiceApi;
 use App\Repositories\TrainStation\TrainStationRepository;
 
-class TrainStationServiceImplement extends ServiceApi implements TrainStationService{
+class TrainStationServiceImplement extends ServiceApi implements TrainStationService
+{
     protected $mainRepository;
 
     /**
@@ -24,14 +25,14 @@ class TrainStationServiceImplement extends ServiceApi implements TrainStationSer
      * because used in extends service class
      */
 
-     /**
+    /**
      * don't change $this->mainRepository variable name
      * because used in extends service class
      */
 
     public function __construct(TrainStationRepository $mainRepository)
     {
-      $this->mainRepository = $mainRepository;
+        $this->mainRepository = $mainRepository;
     }
 
     public function getListStation()

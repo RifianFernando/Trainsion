@@ -13,18 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_booking_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->constrained(
-                    table: 'users',
-                );
-            $table->foreignId('train_id')
-                ->constrained(
-                    table: 'trains',
-                );
-            $table->foreignId('booking_ticket_id')
-                ->constrained(
-                    table: 'booking_tickets',
-                );
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('train_id')->constrained('trains');
             $table->timestamps();
         });
     }

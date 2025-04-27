@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking_tickets', function (Blueprint $table) {
-            // https: //laravel.com/docs/10.x/migrations#creating-columns
+        Schema::create('ticket_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone_number');
-            $table->string('class');
-            $table->enum('class', ['Economy', 'Executive']);
+            $table->string('payment_proof_img');
             $table->enum('status', ['Pending', 'Paid', 'Cancelled'])->default('Pending');
             $table->timestamps();
         });
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking_tickets');
+        Schema::dropIfExists('ticket_payments');
     }
 };
