@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\BookingTrainController;
+use App\Http\Controllers\TicketPaymentController;
 use App\Http\Controllers\TrainStationController;
 
 /*
@@ -41,12 +42,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{btid}', [BookingTicketController::class, 'getUserSessionBookingTicketByID'])->name('getBookingTicketByID');
         Route::post('', [BookingTicketController::class, 'create'])->name('createBookingTicket');
     });
+
+    Route::prefix('/payment')->group(function () {
+        Route::post('', [TicketPaymentController::class, 'payBookingTicket'])->name('payBookingTicket');
+    });
 });
-// Route::prefix('/booking-ticket')->group(
-//     function () {
-//         Route::get('', [BookingTicketController::class, 'index'])->name('getUserSessionBookingTicket');
-//     }
-// );
 
 
 Route::prefix('/trains')->group(function () {

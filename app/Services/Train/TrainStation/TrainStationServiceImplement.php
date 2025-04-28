@@ -16,7 +16,7 @@ class TrainStationServiceImplement extends ServiceApi implements TrainStationSer
      * @param string $update_message
      * @param string $delete_message
      */
-    protected $title = "Booking Train";
+    protected $title = "Train Station";
     protected $create_message = "successfully created";
     protected $update_message = "successfully updated";
     protected $delete_message = "successfully deleted";

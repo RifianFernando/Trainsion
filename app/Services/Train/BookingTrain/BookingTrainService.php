@@ -15,6 +15,4 @@ interface BookingTrainService extends BaseService{
     public function updateBookingTrain($request, $trainId);
 
     public function deleteTrain($structureId);
-
-    public function uploadFile($data, $file_name);
 }

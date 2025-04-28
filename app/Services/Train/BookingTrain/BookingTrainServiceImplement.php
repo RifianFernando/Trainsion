@@ -30,7 +30,7 @@ class BookingTrainServiceImplement extends ServiceApi implements BookingTrainSer
         $this->trainRepository = $trainRepository;
     }
 
-    public function uploadFile($data, $file_name)
+    private function uploadFile($data, $file_name)
     {
         $removeAllWhiteSpaceRegex = '/\s+/';
         $file_name = preg_replace($removeAllWhiteSpaceRegex, '', $file_name);

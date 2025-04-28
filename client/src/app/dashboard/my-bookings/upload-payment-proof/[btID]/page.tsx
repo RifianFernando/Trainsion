@@ -3,8 +3,11 @@ import {
     getUserSessionBookingTicketByID,
     userTicketProps,
 } from "@/api/bookingTicket";
+import { payBookingTicket } from "@/api/paymentTicket";
 import { Button } from "@mui/material";
+import Image from "next/image";
 import { use, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 export default function UploadPaymentProofPage({
     params,
@@ -13,30 +16,80 @@ export default function UploadPaymentProofPage({
 }) {
     const { btID } = use(params);
     const [ticket, setTicket] = useState<userTicketProps[]>([]);
+    const [paymentTicket, setPaymentTicket] = useState<{
+        payment_proof_img: null | File;
+        payment_tickets_id: string;
+    }>({
+        payment_proof_img: null,
+        payment_tickets_id: "",
+    });
     const [ticketPrice, setTicketPrice] = useState<{
         economy: number;
         executive: number;
     }>();
+    const [errorMsg, setErrorMsg] = useState("");
     let totalBuy = 0;
+
     useEffect(() => {
         getUserSessionBookingTicketByID(btID).then((response) => {
             const bookingTicketInfo = response.data.booking_tickets;
             setTicketPrice({
                 economy: response.data.train.economy_price,
-                executive: response.data.train.executive_price
-            })
+                executive: response.data.train.executive_price,
+            });
+            setPaymentTicket({
+                payment_tickets_id: response.data.payment_tickets.id,
+                payment_proof_img: null,
+            });
             setTicket(bookingTicketInfo);
         });
     }, [btID]);
+
+    const handleSubmitPayment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const formData = new FormData();
+        if (
+            paymentTicket.payment_tickets_id !== "" &&
+            paymentTicket.payment_proof_img != null
+        ) {
+            formData.append(
+                "payment_tickets_id",
+                paymentTicket.payment_tickets_id
+            );
+            formData.append(
+                "payment_proof_img",
+                paymentTicket.payment_proof_img
+            );
+        }
+        await payBookingTicket(formData)
+            .then((response) => {
+                if (response.status == 200) {
+                    redirect("/dashboard/my-bookings");
+                }
+            })
+            .catch((error) => {
+                if (error.status === 401 || error.status === 403) {
+                    setErrorMsg('unauthorized');
+                } else {
+                    setErrorMsg(
+                        error.response.data.errors.payment_proof_img[0]
+                    );
+                }
+            });
+    };
+
     return (
-        <form>
+        <form onSubmit={(e) => handleSubmitPayment(e)}>
             <div className="mt-8 flex justify-center border-t border-gray-100 pt-8">
                 <div className="w-screen max-w-lg space-y-4">
                     <div className="flex flex-col gap-5">
                         <h1>Ticket Detail</h1>
                         {ticket.map((item, idx: number) => {
-                            if(ticketPrice != undefined) {
-                                totalBuy += item.class == "Economy" ? ticketPrice.economy : ticketPrice.executive;
+                            if (ticketPrice != undefined) {
+                                totalBuy +=
+                                    item.class == "Economy"
+                                        ? ticketPrice.economy
+                                        : ticketPrice.executive;
                             }
                             return (
                                 <div className="flex flex-col gap-5" key={idx}>
@@ -111,7 +164,7 @@ export default function UploadPaymentProofPage({
                     </dl>
 
                     <label
-                        htmlFor="File"
+                        htmlFor="payment_proof_img"
                         className="flex flex-col items-center rounded border border-gray-300 p-4 text-gray-900 shadow-sm sm:p-6"
                     >
                         <svg
@@ -137,17 +190,44 @@ export default function UploadPaymentProofPage({
                         <span className="mt-2 inline-block rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-center text-xs font-medium text-gray-700 shadow-sm hover:bg-gray-100">
                             Browse files
                         </span>
-
+                        {paymentTicket.payment_proof_img ? (
+                            <Image
+                                src={URL.createObjectURL(
+                                    paymentTicket.payment_proof_img
+                                )}
+                                alt="Uploaded Poster"
+                                width={700}
+                                height={0}
+                                className="rounded-md object-cover xl:h-[400px]"
+                                priority={true}
+                            />
+                        ) : null}
                         <input
                             multiple
                             type="file"
-                            id="File"
+                            id="payment_proof_img"
                             className="sr-only"
+                            name="payment_proof_img"
+                            onChange={(e) =>
+                                setPaymentTicket({
+                                    ...paymentTicket,
+                                    payment_proof_img: e.target.files
+                                        ? e.target.files[0]
+                                        : null,
+                                })
+                            }
                         />
+                        <strong className="font-bold text-red-600">
+                            {errorMsg}
+                        </strong>
                     </label>
 
                     <div className="flex justify-end">
-                        <Button color="success" variant="contained">
+                        <Button
+                            color="success"
+                            variant="contained"
+                            type="submit"
+                        >
                             Upload Payment Proof
                         </Button>
                     </div>

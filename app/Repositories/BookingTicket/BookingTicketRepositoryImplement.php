@@ -7,9 +7,9 @@ use App\Models\TicketPayment;
 use App\Models\trains;
 use App\Models\UserBookingTickets;
 use Illuminate\Support\Facades\DB;
-use LaravelEasyRepository\ServiceApi;
+use LaravelEasyRepository\Implementations\Eloquent;
 
-class BookingTicketRepositoryImplement extends ServiceApi implements BookingTicketRepository
+class BookingTicketRepositoryImplement extends Eloquent implements BookingTicketRepository
 {
 
     /**
@@ -95,13 +95,13 @@ class BookingTicketRepositoryImplement extends ServiceApi implements BookingTick
             $this->ticketPayment->create([
                 'user_booking_ticket_id' => $userBookingTicket->id
             ]);
-
             DB::commit();
+
             return $userBookingTicket;
         } catch (\Exception $exception) {
             DB::rollBack();
 
-            return $this->exceptionResponse($exception);
+            return $exception;
         }
     }
 }

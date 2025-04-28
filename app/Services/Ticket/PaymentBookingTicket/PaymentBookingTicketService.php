@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Services\Ticket\PaymentBookingTicket;
+
+use LaravelEasyRepository\BaseService;
+
+interface PaymentBookingTicketService extends BaseService{
+
+    // Write something awesome :)
+    public function payBookingTicketByID($request, $user);
+}

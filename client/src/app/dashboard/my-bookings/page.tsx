@@ -131,6 +131,7 @@ export default function MyBookingsPage() {
 
                                     <div className="text-gray-700 sm:col-span-2 dark:text-gray-200">
                                         <Button
+                                            href={`/dashboard/my-bookings/upload-payment-proof/${data.id}`}
                                             variant="contained"
                                             color="success"
                                         >

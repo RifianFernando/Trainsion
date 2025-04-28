@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentBookingTicketRequest;
 use App\Models\TicketPayment;
+use App\Services\Ticket\PaymentBookingTicket\PaymentBookingTicketService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TicketPaymentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $paymentBookingTicketService;
+
+    public function __construct(PaymentBookingTicketService $paymentBookingTicketService)
     {
-        //
+        $this->paymentBookingTicketService = $paymentBookingTicketService;
+    }
+    /**
+     * upload payment proof
+     */
+    public function payBookingTicket(PaymentBookingTicketRequest $request): JsonResponse
+    {
+        $user = auth()->user();
+        return $this->paymentBookingTicketService->payBookingTicketByID($request, $user)->toJson();
     }
 
     /**

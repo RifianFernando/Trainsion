@@ -22,7 +22,7 @@ class BookingTicketServiceImplement extends ServiceApi implements BookingTicketS
      * @param string $update_message
      * @param string $delete_message
      */
-    protected $title = "Booking Train";
+    protected $title = "Booking Ticket";
     protected $create_message = "successfully created";
     protected $update_message = "successfully updated";
     protected $delete_message = "successfully deleted";

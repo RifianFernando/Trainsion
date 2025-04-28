@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('payment_proof_img')->nullable();
             $table->enum('status', ['Unpaid', 'Pending', 'Paid', 'Cancelled'])->default('Unpaid');
-            $table->foreignId('user_booking_ticket_id')->constrained('user_booking_tickets');
+        $table->foreignId('user_booking_ticket_id')->constrained('user_booking_tickets');
             $table->timestamps();
         });
     }
