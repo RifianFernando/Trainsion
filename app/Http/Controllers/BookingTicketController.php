@@ -50,20 +50,4 @@ class BookingTicketController extends Controller
         $user = Auth::user();
         return $this->bookingTicketService->createBookingTicket($request, $user)->toJson();
     }
-
-    /**
-     * Update BookingTrain.
-     */
-    // public function update(BookingTrainRequest $request, $trainID): JsonResponse
-    // {
-    //     return $this->bookingTicketService->updateBookingTrain($request, $trainID)->toJson();
-    // }
-
-    /**
-     * Delete Booking Train
-     */
-    // public function destroy($trainID): JsonResponse
-    // {
-    //     return $this->bookingTicketService->deleteTrain($trainID)->toJson();
-    // }
 }

@@ -6,6 +6,7 @@ use App\Models\BookingTicket;
 use LaravelEasyRepository\Implementations\Eloquent;
 use App\Models\TicketPayment;
 use App\Models\trains;
+use App\Models\User;
 use App\Models\UserBookingTickets;
 use Illuminate\Support\Facades\DB;
 
@@ -102,8 +103,11 @@ class TicketPaymentRepositoryImplement extends Eloquent implements TicketPayment
                 'status' => $status == 'accept' ? 'Paid' : 'Cancelled'
             ]);
 
+            $userBookingTicket = $this->userBookingTicket->findOrFail($ticket->id);
+            $user = User::find($userBookingTicket->user_id);
+
             DB::commit();
-            return $ticket;
+            return $user;
         } catch (\Exception $exception) {
             return $exception;
         }

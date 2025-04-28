@@ -103,10 +103,7 @@ class PaymentBookingTicketServiceImplement extends ServiceApi implements Payment
     {
         try {
             $result = $this->mainRepository->handleRejectAndAcceptPaymentStatus($tid, $status);
-            return $this
-                ->setMessage($this->title .' '. $this->delete_message)
-                ->setCode(200)
-                ->setResult($result);
+            return $result;
         } catch (\Exception $exception) {
             return $exception;
         }

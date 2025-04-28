@@ -15,4 +15,6 @@ interface BookingTicketService extends BaseService
     public function getUserSessionBookingTicketByID($btID, $user);
 
     public function createBookingTicket($request, $user);
+
+    public function sendConfirmationPaymentEmailBookingTicket($user);
 }

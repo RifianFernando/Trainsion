@@ -10,32 +10,32 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class SendMail extends Mailable
- {
-     use Queueable, SerializesModels;
+{
+    use Queueable, SerializesModels;
 
-     public $contactData;  // This will hold the validated contact form data.
+    public $data;  // This will hold the validated contact form data.
 
-     /**
-      * Create a new message instance.
-      *
-      * @param array $contactData The validated contact form data.
-      */
-     public function __construct($contactData)
-     {
-         $this->contactData = $contactData;
+    /**
+     * Create a new message instance.
+     *
+     * @param array $data The validated contact form data.
+     */
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
 
-     }
-
-     /**
-      * Build the message.
-      *
-      * @return $this
-      */
-     public function build(){
-         return $this->from($this->contactData['email'])
-         ->subject('New Contact Us Email')
-         ->view('mail')
-         ->with('contactData', $this->contactData);
-     }
-
- }
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->from('noreply@trainsion.com', 'Trainsion')
+            ->to($this->data['email'], $this->data['name'])
+            ->subject('Confirmation Payment Trainsion')
+            ->view('mail')
+            ->with('data', $this->data);
+    }
+}

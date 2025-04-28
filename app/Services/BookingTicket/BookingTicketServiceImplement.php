@@ -3,8 +3,10 @@
 namespace App\Services\BookingTicket;
 
 use App\Http\Requests\BookingTicketRequest;
+use App\Mail\SendMail;
 use LaravelEasyRepository\ServiceApi;
 use App\Repositories\BookingTicket\BookingTicketRepository;
+use Illuminate\Support\Facades\Mail;
 
 class BookingTicketServiceImplement extends ServiceApi implements BookingTicketService
 {
@@ -93,6 +95,31 @@ class BookingTicketServiceImplement extends ServiceApi implements BookingTicketS
                 ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
+        }
+    }
+
+    public function sendConfirmationPaymentEmailBookingTicket($user)
+    {
+        try {
+            $data = [
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'subject' => 'U already paid the ticket of the booking ticket',
+                'message' => 'success'
+            ];
+            Mail::to(env('MAIL_FROM_ADDRESS'))->send(new SendMail($data));
+
+            return [
+                'status' => 200,
+                'message' => 'Confirmation email sent successfully'
+            ];
+        } catch (\Exception $exception) {
+            // Return error info
+            return [
+                'status' => 500,
+                'message' => 'Failed to send email',
+                'error' => $exception->getMessage()
+            ];
         }
     }
 }

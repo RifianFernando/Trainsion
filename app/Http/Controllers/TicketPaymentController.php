@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentBookingTicketRequest;
+use App\Services\BookingTicket\BookingTicketService;
 use App\Services\Ticket\PaymentBookingTicket\PaymentBookingTicketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketPaymentController extends Controller
 {
     protected $paymentBookingTicketService;
+    protected $bookingTicketService;
 
-    public function __construct(PaymentBookingTicketService $paymentBookingTicketService)
+    public function __construct(
+        PaymentBookingTicketService $paymentBookingTicketService,
+        BookingTicketService $bookingTicketService
+    )
     {
         $this->paymentBookingTicketService = $paymentBookingTicketService;
+        $this->bookingTicketService = $bookingTicketService;
     }
     /**
      * upload payment proof
@@ -40,6 +47,9 @@ class TicketPaymentController extends Controller
     public function handleRejectAndAcceptPaymentStatus(Request $request, $tid)
     {
         $status = $request->type;
-        return $this->paymentBookingTicketService->handleRejectAndAcceptPaymentStatus($tid, $status)->toJson();
+        $user = $this->paymentBookingTicketService->handleRejectAndAcceptPaymentStatus($tid, $status);
+        $result = $this->bookingTicketService->sendConfirmationPaymentEmailBookingTicket($user);
+
+        return response()->json($result, $result['status']);
     }
 }
