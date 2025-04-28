@@ -46,8 +46,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/payment')->group(function () {
         Route::post('', [TicketPaymentController::class, 'payBookingTicket'])->name('payBookingTicket');
     });
+    // Route::delete('/{tid}', [TicketPaymentController::class, 'destroy'])->name('cancelBookingTicket');
 });
 
+Route::delete('/payment/{tid}', [TicketPaymentController::class, 'destroy'])->name('cancelBookingTicket');
 
 Route::prefix('/trains')->group(function () {
     Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');

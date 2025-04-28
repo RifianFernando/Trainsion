@@ -8,4 +8,6 @@ interface PaymentBookingTicketService extends BaseService{
 
     // Write something awesome :)
     public function payBookingTicketByID($request, $user);
+
+    public function cancelBookingTicketByID($user, $tid);
 }

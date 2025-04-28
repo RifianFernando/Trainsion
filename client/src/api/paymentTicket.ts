@@ -19,3 +19,20 @@ export async function payBookingTicket(
         throw error;
     }
 }
+
+export async function cancelBookingTicket(
+    ticketID: string
+): Promise<AxiosResponse> {
+    try {
+        await csrf();
+        const response = await api.delete(`/api/payment/${ticketID}`, {
+            headers: {
+                "X-XSRF-TOKEN": getCSRFToken(),
+            },
+        });
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}

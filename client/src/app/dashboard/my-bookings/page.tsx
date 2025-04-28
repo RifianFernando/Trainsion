@@ -3,6 +3,7 @@ import {
     getUserSessionBookingTicket,
     UserSessionBookingTicket,
 } from "@/api/bookingTicket";
+import { cancelBookingTicket } from "@/api/paymentTicket";
 import Navbar from "@/components/home/navbar";
 import { Button } from "@mui/material";
 import Image from "next/image";
@@ -15,6 +16,17 @@ export default function MyBookingsPage() {
             setData(response.data);
         });
     }, []);
+
+    const handleCancelPayment = async (ticketID: string) => {
+        await cancelBookingTicket(ticketID).then((response) => {
+            if (response.status == 200) {
+                window.location.reload();
+            }
+        }).catch((error) => {
+            console.error('Error while canceling payment', error);
+        })
+    };
+
     return (
         <div>
             <Navbar />
@@ -124,19 +136,31 @@ export default function MyBookingsPage() {
                                 </div>
                             </dl>
                             {data.payment_tickets.status == "Unpaid" ? (
-                                <div className="flex justify-around items-center mt-5">
-                                    <div className="font-medium text-gray-900 dark:text-white">
-                                        Pay now ?
-                                    </div>
+                                <div>
+                                    <div className="flex justify-around items-center mt-5">
+                                        <div className="flex justify-center items-center">
+                                            <div className="text-gray-700 sm:col-span-2 dark:text-gray-200">
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={
+                                                        () => handleCancelPayment(data.id)
+                                                    }
+                                                >
+                                                    Cancel Payment
+                                                </Button>
+                                            </div>
+                                        </div>
 
-                                    <div className="text-gray-700 sm:col-span-2 dark:text-gray-200">
-                                        <Button
-                                            href={`/dashboard/my-bookings/upload-payment-proof/${data.id}`}
-                                            variant="contained"
-                                            color="success"
-                                        >
-                                            Pay Now
-                                        </Button>
+                                        <div className="flex justify-around items-center text-gray-700 sm:col-span-2 dark:text-gray-200">
+                                            <Button
+                                                href={`/dashboard/my-bookings/upload-payment-proof/${data.id}`}
+                                                variant="contained"
+                                                color="success"
+                                            >
+                                                Pay Now
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             ) : null}

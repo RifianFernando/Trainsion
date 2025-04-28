@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentBookingTicketRequest;
-use App\Models\TicketPayment;
 use App\Services\Ticket\PaymentBookingTicket\PaymentBookingTicketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,50 +25,15 @@ class TicketPaymentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TicketPayment $ticketPayment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TicketPayment $ticketPayment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TicketPayment $ticketPayment)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TicketPayment $ticketPayment)
+    public function destroy($tid)
     {
-        //
+        $user = auth()->user();
+        // $user = [
+        //     'id' => 2,
+        //     'name' => 'Rifian'
+        // ];
+        return $this->paymentBookingTicketService->cancelBookingTicketByID($user, $tid)->toJson();
     }
 }
