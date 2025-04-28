@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('ticket_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_proof_img');
-            $table->enum('status', ['Pending', 'Paid', 'Cancelled'])->default('Pending');
+            $table->string('payment_proof_img')->nullable();
+            $table->enum('status', ['Unpaid', 'Pending', 'Paid', 'Cancelled'])->default('Unpaid');
+            $table->foreignId('user_booking_ticket_id')->constrained('user_booking_tickets');
             $table->timestamps();
         });
     }

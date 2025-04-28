@@ -11,19 +11,29 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingTicketController extends Controller
 {
-    protected $bookingTrainService;
+    protected $bookingTicketService;
 
-    public function __construct(BookingTicketService $bookingTrainService)
+    public function __construct(BookingTicketService $bookingTicketService)
     {
-        $this->bookingTrainService = $bookingTrainService;
+        $this->bookingTicketService = $bookingTicketService;
     }
     /**
      * Display a listing of the resource.
      */
-    // public function index(): JsonResponse
-    // {
-    //     return $this->bookingTrainService->getTrain()->toJson();
-    // }
+    public function index(): JsonResponse
+    {
+        $user = Auth::user();
+        return $this->bookingTicketService->getUserSessionBookingTicket($user)->toJson();
+    }
+
+    /**
+     * Get BookingTicketByID
+     */
+    public function getUserSessionBookingTicketByID($btID): JsonResponse
+    {
+        $user = Auth::user();
+        return $this->bookingTicketService->getUserSessionBookingTicketByID($btID, $user)->toJson();
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -31,23 +41,15 @@ class BookingTicketController extends Controller
     public function create(BookingTicketRequest $request): JsonResponse
     {
         $user = Auth::user();
-        return $this->bookingTrainService->createBookingTicket($request, $user)->toJson();
+        return $this->bookingTicketService->createBookingTicket($request, $user)->toJson();
     }
-
-    /**
-     * Get BookingTrainByID
-     */
-    // public function getBookingTrainByID($trainID): JsonResponse
-    // {
-    //     return $this->bookingTrainService->getTrainByID($trainID)->toJson();
-    // }
 
     /**
      * Update BookingTrain.
      */
     // public function update(BookingTrainRequest $request, $trainID): JsonResponse
     // {
-    //     return $this->bookingTrainService->updateBookingTrain($request, $trainID)->toJson();
+    //     return $this->bookingTicketService->updateBookingTrain($request, $trainID)->toJson();
     // }
 
     /**
@@ -55,6 +57,6 @@ class BookingTicketController extends Controller
      */
     // public function destroy($trainID): JsonResponse
     // {
-    //     return $this->bookingTrainService->deleteTrain($trainID)->toJson();
+    //     return $this->bookingTicketService->deleteTrain($trainID)->toJson();
     // }
 }

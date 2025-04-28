@@ -17,6 +17,6 @@ class TicketPayment extends Model
 
     public function userBookingTicket()
     {
-        return $this->belongsTo(UserBookingTickets::class, 'user_booking_ticket_id');
+        return $this->hasOne(UserBookingTickets::class, 'user_booking_ticket_id');
     }
 }

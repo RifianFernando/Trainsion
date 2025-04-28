@@ -36,10 +36,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
+    Route::prefix('/booking-ticket')->group(function () {
+        Route::get('', [BookingTicketController::class, 'index'])->name('getUserSessionBookingTicket');
+        Route::get('/{btid}', [BookingTicketController::class, 'getUserSessionBookingTicketByID'])->name('getBookingTicketByID');
+        Route::post('', [BookingTicketController::class, 'create'])->name('createBookingTicket');
+    });
 });
-Route::prefix('/booking-ticket')->group(function () {
-    Route::post('', [BookingTicketController::class, 'create'])->name('createBookingTicket');
-});
+// Route::prefix('/booking-ticket')->group(
+//     function () {
+//         Route::get('', [BookingTicketController::class, 'index'])->name('getUserSessionBookingTicket');
+//     }
+// );
+
 
 Route::prefix('/trains')->group(function () {
     Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');

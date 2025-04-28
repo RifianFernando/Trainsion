@@ -1,3 +1,4 @@
+
 export default function getCSRFToken() {
     const CSRF_TOKEN = decodeURIComponent(
         document.cookie

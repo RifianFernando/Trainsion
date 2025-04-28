@@ -4,6 +4,7 @@ namespace App\Repositories\BookingTicket;
 
 use App\Models\BookingTicket;
 use App\Models\TicketPayment;
+use App\Models\trains;
 use App\Models\UserBookingTickets;
 use Illuminate\Support\Facades\DB;
 use LaravelEasyRepository\ServiceApi;
@@ -19,45 +20,84 @@ class BookingTicketRepositoryImplement extends ServiceApi implements BookingTick
     protected $bookingTicket;
     protected $userBookingTicket;
     protected $ticketPayment;
+    protected $train;
 
     public function __construct(
         BookingTicket $bookingTicket,
         UserBookingTickets $userBookingTicket,
-        TicketPayment $ticketPayment
-    )
-    {
+        TicketPayment $ticketPayment,
+        trains $train
+    ) {
         $this->bookingTicket = $bookingTicket;
         $this->userBookingTicket = $userBookingTicket;
         $this->ticketPayment = $ticketPayment;
+        $this->train = $train;
     }
 
     // Write something awesome :)
+    public function getUserSessionBookingTicket($user)
+    {
+        $result = $this->userBookingTicket->with([
+            'paymentTickets',
+            'bookingTickets',
+            'train',
+            'train.originTrainStation',
+            'train.destinationTrainStation'
+        ])->where(
+            'user_id',
+            $user['id']
+        )->get();
+
+        return $result;
+    }
+
+    // Write something awesome :)
+    public function getUserSessionBookingTicketByID($btID, $user)
+    {
+        $result = $this->userBookingTicket->with([
+            'paymentTickets',
+            'bookingTickets',
+            'train',
+            'train.originTrainStation',
+            'train.destinationTrainStation'
+        ])->findOrFail($btID);
+
+        return $result;
+    }
+
     public function createBookingTicket($data)
     {
         try {
             DB::beginTransaction();
 
             $userBookingTicket = $this->userBookingTicket->create([
-                'user_id' => $data->user_id,
-                'train_id' => $data->train_id,
+                'user_id' => $data['user_id'],
+                'train_id' => $data['train_id'],
             ]);
-            foreach ($data->user as $user) {
+
+            $totalSeat = 0;
+            foreach ($data['user'] as $user) {
                 $this->bookingTicket->create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone_number' => $user->email,
-                    'class' => $user->class,
-                    'user_booking_ticket_id' => $userBookingTicket->id
+                    'name' => $user['name'],
+                    'email' => $user['email'],
+                    'phone_number' => $user['phone_number'],
+                    'class' => $user['class'],
+                    'user_booking_ticket_id' => $userBookingTicket['id']
                 ]);
+                $totalSeat++;
             }
 
+            $train = $this->train->findOrFail($data['train_id']);
+            $train->updateOrFail([
+                'seats_available' => $train->seats_available - $totalSeat
+            ]);
+
             $this->ticketPayment->create([
-                // TODO: add store file like create train for at the payment service
-                'payment_proof_img' => 'filenya apaa',
                 'user_booking_ticket_id' => $userBookingTicket->id
             ]);
 
             DB::commit();
+            return $userBookingTicket;
         } catch (\Exception $exception) {
             DB::rollBack();
 

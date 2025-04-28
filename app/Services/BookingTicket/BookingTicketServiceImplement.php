@@ -37,6 +37,32 @@ class BookingTicketServiceImplement extends ServiceApi implements BookingTicketS
         $this->mainRepository = $mainRepository;
     }
 
+    public function getUserSessionBookingTicket($user)
+    {
+        try {
+            $result = $this->mainRepository->getUserSessionBookingTicket($user);
+
+            return $this
+                ->setCode(200)
+                ->setResult($result);
+        } catch (\Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    public function getUserSessionBookingTicketByID($btID, $user)
+    {
+        try {
+            $result = $this->mainRepository->getUserSessionBookingTicketByID($btID, $user);
+
+            return $this
+                ->setCode(200)
+                ->setResult($result);
+        } catch (\Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
     // Define your custom methods :)
     public function createBookingTicket($request, $user)
     {
@@ -46,7 +72,12 @@ class BookingTicketServiceImplement extends ServiceApi implements BookingTicketS
                 "train_id" => $request->trainID
             ];
             $data['user'] = $request->userData;
-            return $this->mainRepository->createBookingTicket($data, $user);
+            $result = $this->mainRepository->createBookingTicket($data);
+
+            return $this
+                ->setMessage($this->create_message)
+                ->setCode(200)
+                ->setResult($result);
         } catch (\Exception $exception) {
             return $this->exceptionResponse($exception);
         }
