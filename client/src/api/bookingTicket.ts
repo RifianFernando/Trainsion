@@ -33,6 +33,17 @@ export async function getUserSessionBookingTicket(): Promise<apiGetUserSessionBo
     }
 }
 
+export async function getAllBookingTicket(): Promise<apiGetUserSessionBookingTicket> {
+    try {
+        const response: AxiosResponse<apiGetUserSessionBookingTicket> =
+            await api.get("api/booking-ticket/admin");
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 interface apiGetUserSessionBookingTicketByID {
     data: UserSessionBookingTicket;
 }

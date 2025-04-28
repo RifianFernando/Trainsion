@@ -25,6 +25,13 @@ class BookingTicketController extends Controller
         $user = Auth::user();
         return $this->bookingTicketService->getUserSessionBookingTicket($user)->toJson();
     }
+    /**
+     * Display a listing of the all user resource.
+     */
+    public function adminIndex(): JsonResponse
+    {
+        return $this->bookingTicketService->getAllBookingTicketUser()->toJson();
+    }
 
     /**
      * Get BookingTicketByID

@@ -51,6 +51,19 @@ class BookingTicketRepositoryImplement extends Eloquent implements BookingTicket
         return $result;
     }
 
+    public function getAllBookingTicketUser()
+    {
+        $result = $this->userBookingTicket->with([
+            'paymentTickets',
+            'bookingTickets',
+            'train',
+            'train.originTrainStation',
+            'train.destinationTrainStation'
+        ])->get();
+
+        return $result;
+    }
+
     // Write something awesome :)
     public function getUserSessionBookingTicketByID($btID, $user)
     {

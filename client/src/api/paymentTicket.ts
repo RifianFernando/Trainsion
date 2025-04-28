@@ -36,3 +36,25 @@ export async function cancelBookingTicket(
         throw error;
     }
 }
+
+export async function handleRejectAndAcceptPaymentStatusApi(
+    ticketID: string,
+    type: "reject" | "accept"
+): Promise<AxiosResponse> {
+    try {
+        await csrf();
+        const response = await api.post(
+            `/api/payment/handle/${ticketID}`,
+            { type },
+            {
+                headers: {
+                    "X-XSRF-TOKEN": getCSRFToken(),
+                },
+            }
+        );
+
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}

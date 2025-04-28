@@ -50,6 +50,19 @@ class BookingTicketServiceImplement extends ServiceApi implements BookingTicketS
         }
     }
 
+    public function getAllBookingTicketUser()
+    {
+        try {
+            $result = $this->mainRepository->getAllBookingTicketUser();
+
+            return $this
+                ->setCode(200)
+                ->setResult($result);
+        } catch (\Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
     public function getUserSessionBookingTicketByID($btID, $user)
     {
         try {

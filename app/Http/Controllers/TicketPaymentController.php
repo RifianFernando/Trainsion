@@ -33,4 +33,13 @@ class TicketPaymentController extends Controller
 
         return $this->paymentBookingTicketService->cancelBookingTicketByID($user, $tid)->toJson();
     }
+
+    /**
+     * handle Reject AndA ccept Payment Status
+     */
+    public function handleRejectAndAcceptPaymentStatus(Request $request, $tid)
+    {
+        $status = $request->type;
+        return $this->paymentBookingTicketService->handleRejectAndAcceptPaymentStatus($tid, $status)->toJson();
+    }
 }

@@ -90,4 +90,22 @@ class TicketPaymentRepositoryImplement extends Eloquent implements TicketPayment
             return $exception;
         }
     }
+
+    public function handleRejectAndAcceptPaymentStatus($tid, $status)
+    {
+        try {
+            DB::beginTransaction();
+
+            $ticket = $this->model->findOrFail($tid);
+
+            $ticket->update([
+                'status' => $status == 'accept' ? 'Paid' : 'Cancelled'
+            ]);
+
+            DB::commit();
+            return $ticket;
+        } catch (\Exception $exception) {
+            return $exception;
+        }
+    }
 }

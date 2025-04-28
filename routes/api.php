@@ -35,6 +35,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::delete('/{tid}', [BookingTrainController::class, 'destroy'])->name('deleteTrainBooking');
             Route::post('/update/{tid}', [BookingTrainController::class, 'update'])->name('updateBookingTrain');
         });
+
+        Route::prefix('/booking-ticket')->group(function () {
+            Route::get('/admin', [BookingTicketController::class, 'adminIndex'])->name('getAllBookingTicketUser');
+        });
+
+        Route::prefix('/payment')->group(function () {
+            Route::post('/handle/{tid}', [TicketPaymentController::class, 'handleRejectAndAcceptPaymentStatus'])->name('chandleRejectAndAcceptPaymentStatusancelBookingTicket');
+        });
     });
 
     Route::prefix('/booking-ticket')->group(function () {
@@ -45,11 +53,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('/payment')->group(function () {
         Route::post('', [TicketPaymentController::class, 'payBookingTicket'])->name('payBookingTicket');
+        Route::delete('/{tid}', [TicketPaymentController::class, 'destroy'])->name('cancelBookingTicket');
     });
-    // Route::delete('/{tid}', [TicketPaymentController::class, 'destroy'])->name('cancelBookingTicket');
 });
-
-Route::delete('/payment/{tid}', [TicketPaymentController::class, 'destroy'])->name('cancelBookingTicket');
 
 Route::prefix('/trains')->group(function () {
     Route::get('', [BookingTrainController::class, 'index'])->name('listTrain');

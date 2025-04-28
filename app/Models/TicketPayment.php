@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class TicketPayment extends Model
 {
@@ -18,5 +19,11 @@ class TicketPayment extends Model
     public function userBookingTicket()
     {
         return $this->hasOne(UserBookingTickets::class);
+    }
+
+    // https://laravel.com/docs/10.x/eloquent-mutators
+    public function getPaymentProofImgAttribute($value)
+    {
+        return $value ? url(Storage::url($value)) : null;
     }
 }

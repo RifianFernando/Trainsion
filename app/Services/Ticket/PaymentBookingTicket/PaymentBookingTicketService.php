@@ -10,4 +10,6 @@ interface PaymentBookingTicketService extends BaseService{
     public function payBookingTicketByID($request, $user);
 
     public function cancelBookingTicketByID($user, $tid);
+
+    public function handleRejectAndAcceptPaymentStatus($tid, $status);
 }

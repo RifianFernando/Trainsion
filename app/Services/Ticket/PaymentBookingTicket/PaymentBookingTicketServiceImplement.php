@@ -85,4 +85,30 @@ class PaymentBookingTicketServiceImplement extends ServiceApi implements Payment
             return $exception;
         }
     }
+
+    public function getAllBookingTicketUser($user, $tid)
+    {
+        try {
+            $result = $this->mainRepository->cancelBookingTicketByID($user, $tid);
+            return $this
+                ->setMessage($this->title . '' . $this->delete_message)
+                ->setCode(200)
+                ->setResult($result);
+        } catch (\Exception $exception) {
+            return $exception;
+        }
+    }
+
+    public function handleRejectAndAcceptPaymentStatus($tid, $status)
+    {
+        try {
+            $result = $this->mainRepository->handleRejectAndAcceptPaymentStatus($tid, $status);
+            return $this
+                ->setMessage($this->title .' '. $this->delete_message)
+                ->setCode(200)
+                ->setResult($result);
+        } catch (\Exception $exception) {
+            return $exception;
+        }
+    }
 }
