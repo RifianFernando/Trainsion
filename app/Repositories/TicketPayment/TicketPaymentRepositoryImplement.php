@@ -5,6 +5,7 @@ namespace App\Repositories\TicketPayment;
 use App\Models\BookingTicket;
 use LaravelEasyRepository\Implementations\Eloquent;
 use App\Models\TicketPayment;
+use App\Models\trains;
 use App\Models\UserBookingTickets;
 use Illuminate\Support\Facades\DB;
 
@@ -19,13 +20,16 @@ class TicketPaymentRepositoryImplement extends Eloquent implements TicketPayment
     protected $model;
     protected $userBookingTicket;
     protected $bookingTicket;
+    protected $train;
 
     public function __construct(
         TicketPayment $model,
         UserBookingTickets $userBookingTicket,
-        BookingTicket $bookingTicket
+        BookingTicket $bookingTicket,
+        trains $train
     ) {
         $this->model = $model;
+        $this->train = $train;
         $this->userBookingTicket = $userBookingTicket;
         $this->bookingTicket = $bookingTicket;
     }
@@ -58,14 +62,20 @@ class TicketPaymentRepositoryImplement extends Eloquent implements TicketPayment
             DB::beginTransaction();
 
             $searchTicket = $this->userBookingTicket
-                ->with(['paymentTickets', 'bookingTickets'])
+                ->with(['paymentTickets', 'bookingTickets', 'train'])
                 ->where('id', $tid)
                 ->where('user_id', $user['id'])
                 ->firstOrFail();
 
+            $seatsUpdateTotal = 0;
             foreach ($searchTicket->bookingTickets as $bid) {
                 $this->bookingTicket->findOrFail($bid->id)->delete();
+                $seatsUpdateTotal++;
             }
+
+            $this->train->findOrFail($searchTicket->train->id)->update([
+                'seats_available' => $searchTicket->train->seats_available + $seatsUpdateTotal
+            ]);
 
             $this->model->findOrFail($searchTicket->paymentTickets->id)->delete();
 

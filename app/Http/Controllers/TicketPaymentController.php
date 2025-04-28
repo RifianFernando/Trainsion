@@ -30,10 +30,7 @@ class TicketPaymentController extends Controller
     public function destroy($tid)
     {
         $user = auth()->user();
-        // $user = [
-        //     'id' => 2,
-        //     'name' => 'Rifian'
-        // ];
+
         return $this->paymentBookingTicketService->cancelBookingTicketByID($user, $tid)->toJson();
     }
 }
